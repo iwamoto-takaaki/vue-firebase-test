@@ -3,7 +3,9 @@
     #nav
       router-link(to="/") Home
       |  | 
-      router-link(to="/about") Abou
+      router-link(to="/about") About
+      |  | 
+      router-link(to="/messages") Messages
     router-view
  </template>
 
