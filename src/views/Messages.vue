@@ -8,6 +8,6 @@
 import Vue from 'vue';
 
 export default class Message extends Vue {
-    public messages = this.$store.state.messages;
+    public messages = this.$store.state.message.messages;
 }
 </script>
