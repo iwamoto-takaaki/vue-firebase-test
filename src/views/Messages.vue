@@ -2,7 +2,7 @@
     #messages
         h1 this is message page!
         .message-list(v-for="message in messages")
-            p {{ message }}
+            p {{ message.content }}
 </template>
 <script lang="ts">
 import Vue from 'vue';

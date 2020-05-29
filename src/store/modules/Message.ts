@@ -1,5 +1,10 @@
 export const namespaced = true;
 
+export interface Message {
+    content: string;
+}
+
 export const state = {
-    messages: ['hello world', 'hello everyone'],
+    messages: [{content: 'hello world'}, {content: 'hello everyone'}] as Message[],
 };
+
