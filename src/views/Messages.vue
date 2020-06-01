@@ -7,14 +7,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import store from '@/store/store';
+import messages, { Message } from '@/store/modules/messages';
 
 @Component
-export default class Message extends Vue {
-    private messages = this.$store.state.messages.messages;
+export default class MessageView extends Vue {
+    private messages = messages.messages;
 
     public async created() {
-        store.dispatch('messages/add', {content: 'hello world'});
+        messages.add({content: 'hello evertone!'});
     }
 }
 </script>
