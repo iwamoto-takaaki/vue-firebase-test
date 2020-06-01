@@ -6,8 +6,15 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
+import store from '@/store/store';
 
+@Component
 export default class Message extends Vue {
-    public messages = this.$store.state.message.messages;
+    private messages = this.$store.state.messages.messages;
+
+    public async created() {
+        store.dispatch('messages/add', {content: 'hello world'});
+    }
 }
 </script>
