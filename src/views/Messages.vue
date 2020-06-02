@@ -1,8 +1,11 @@
 <template lang="pug">
     #messages
         h1 this is message page!
-        .message-list(v-for="message in messages")
-            p {{ message.content }}
+        MessageCard(
+            v-for="message in messages" 
+            :message="message" 
+            :key='message.id' 
+            v-on:remove='removeMessage')
         .message-form
             form(@submit.prevent='addNewMessage')
                 label new message:
@@ -13,15 +16,24 @@
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
 import messages, { Message } from '@/store/modules/messages';
+import MessageCard from '@/components/MessageCard.vue';
 
-@Component
+@Component({
+    components: {
+        MessageCard,
+    },
+})
 export default class MessageView extends Vue {
     private messages = messages.messages;
     private newMessage: string = '';
 
     public async addNewMessage() {
-        await messages.add({content: this.newMessage});
+        await messages.add(this.newMessage);
         this.newMessage = '';
+    }
+
+    public async removeMessage(message: Message) {
+        messages.remove(message);
     }
 }
 </script>
