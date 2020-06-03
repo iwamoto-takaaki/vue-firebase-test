@@ -15,7 +15,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
-import { db, firestore } from '@/script/firebase';
 import messages, { Message, Messages } from '@/store/modules/messages';
 import MessageCard from '@/components/MessageCard.vue';
 
@@ -24,41 +23,34 @@ import MessageCard from '@/components/MessageCard.vue';
         MessageCard,
     },
 })
-export default class MessageView extends Vue {
-
-    get refMessages(): firebase.firestore.CollectionReference {
-        return db.collection('messages');
-    }
+export default class MessageView extends Vue implements Messages {
     public detacher?: firebase.Unsubscribe;
-    private messages = messages.messages;
+    public messages: Message[] = [];
     private newMessage: string = '';
 
+    public async created() {
+        // message.ts に移動させてみたが、reactiveが動作しなくなった。
+        // todo: reactiveの仕組みを理解して動作するように修正する。
+        this.detacher = messages.refMessages
+            .orderBy('timeCreated')
+            .onSnapshot((snapshot: any) => {
+                this.messages = snapshot.docs.map((doc: any) => {
+                    return Object.assign(doc.data(), { id: doc.id }) as Message[];
+                });
+            });
+    }
+
     public async addNewMessage() {
-        await this.refMessages.add({
-            timeCreated: firestore.FieldValue.serverTimestamp(),
-            content: this.newMessage,
-        });
+        await messages.add(this.newMessage);
         this.newMessage = '';
     }
 
     public async removeMessage(message: Message) {
-        await this.refMessages.doc(message.id).delete();
+        await messages.remove(message);
     }
 
-    public async created() {
-        this.detacher = this.refMessages
-            .orderBy('timeCreated')
-            .onSnapshot((snapshot: any) => {
-                this.messages = snapshot.docs.map((doc: any) => {
-                return Object.assign(doc.data(), { id: doc.id }) as Message[];
-            });
-        });
-    }
-
-    public async destroyed() {
-        if (this.detacher !== undefined) {
-            (this.detacher as firebase.Unsubscribe)();
-        }
+    public destroyed() {
+        messages.unsubscribe(this.destroyed);
     }
 }
 </script>

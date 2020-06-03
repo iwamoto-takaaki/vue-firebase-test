@@ -1,4 +1,5 @@
 import { Module, VuexModule, Action, Mutation, getModule } from 'vuex-module-decorators';
+import { db, firestore } from '@/script/firebase';
 import store from '@/store/store';
 
 export interface Message {
@@ -7,41 +8,35 @@ export interface Message {
 }
 
 export interface Messages {
-    currentId: number;
     messages: Message[];
 }
 
 @Module({ dynamic: true, store, name: 'messages', namespaced: true })
-class MessageModule extends VuexModule implements Messages {
-    public currentId: number = 0;
-    public messages: Message[] = [];
-
-    public created() {
-        this.ADD('Hello world');
+class MessageModule extends VuexModule {
+    public get refMessages(): firebase.firestore.CollectionReference {
+        return db.collection('messages');
     }
 
-    @Mutation
-    public ADD(message: string) {
-        this.messages.push({id: this.currentId.toString(), content: message});
-        this.currentId++;
+    @Action
+    public async add(content: string) {
+        await this.refMessages.add({
+            timeCreated: firestore.FieldValue.serverTimestamp(),
+            content,
+        });
     }
 
-    @Mutation
-    public REMOVE(message: Message) {
-        const index = this.messages.indexOf(message);
-        if (index < 0) { return; }
-        this.messages.splice(index, 1);
+    @Action
+    public async remove(message: Message) {
+        await this.refMessages.doc(message.id).delete();
     }
 
-    @Action({})
-    public add(message: string) {
-        this.ADD(message);
+    @Action
+    public unsubscribe(detacher: firebase.Unsubscribe | undefined): void {
+        if (detacher !== undefined) {
+            detacher();
+        }
     }
 
-    @Action({})
-    public remove(message: Message) {
-        this.REMOVE(message);
-    }
 }
 
 export default getModule(MessageModule);
