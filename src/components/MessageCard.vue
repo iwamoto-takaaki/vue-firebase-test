@@ -1,6 +1,6 @@
 <template lang="pug">
     .messageCard
-        .content {{ message.content }}
+        .content {{ message.id }}: {{ message.content }} 
         a(@click='remove') remove
 </template>
 <script lang="ts">

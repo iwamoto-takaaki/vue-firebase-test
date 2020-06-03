@@ -2,7 +2,7 @@ import { Module, VuexModule, Action, Mutation, getModule } from 'vuex-module-dec
 import store from '@/store/store';
 
 export interface Message {
-    id: number;
+    id: string;
     content: string;
 }
 
@@ -22,7 +22,8 @@ class MessageModule extends VuexModule implements Messages {
 
     @Mutation
     public ADD(message: string) {
-        this.messages.push({id: this.currentId++, content: message});
+        this.messages.push({id: this.currentId.toString(), content: message});
+        this.currentId++;
     }
 
     @Mutation
