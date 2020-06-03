@@ -26,29 +26,27 @@ import MessageCard from '@/components/MessageCard.vue';
 })
 export default class MessageView extends Vue {
 
-    get refMessages(): firebase.firestore.DocumentReference {
-        return db.doc('messages/1');
+    get refMessages(): firebase.firestore.CollectionReference {
+        return db.collection('messages');
     }
     public detacher?: firebase.Unsubscribe;
     private messages = messages.messages;
     private newMessage: string = '';
 
     public async addNewMessage() {
-        await this.refMessages.collection('messages').add({
+        await this.refMessages.add({
             timeCreated: firestore.FieldValue.serverTimestamp(),
             content: this.newMessage,
         });
-        // await messages.add(this.newMessage);
         this.newMessage = '';
     }
 
     public async removeMessage(message: Message) {
-        await this.refMessages.collection('messages').doc(message.id).delete();
+        await this.refMessages.doc(message.id).delete();
     }
 
     public async created() {
         this.detacher = this.refMessages
-            .collection('messages')
             .orderBy('timeCreated')
             .onSnapshot((snapshot: any) => {
                 this.messages = snapshot.docs.map((doc: any) => {
