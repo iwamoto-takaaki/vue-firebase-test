@@ -31,7 +31,7 @@ export default class MessageView extends Vue implements Messages {
     public async created() {
         // message.ts に移動させてみたが、reactiveが動作しなくなった。
         // todo: reactiveの仕組みを理解して動作するように修正する。
-        this.detacher = messages.refMessages
+        this.detacher = messages.collection
             .orderBy('timeCreated')
             .onSnapshot((snapshot: any) => {
                 this.messages = snapshot.docs.map((doc: any) => {
@@ -50,7 +50,7 @@ export default class MessageView extends Vue implements Messages {
     }
 
     public destroyed() {
-        messages.unsubscribe(this.destroyed);
+        messages.unsubscribe(this.detacher);
     }
 }
 </script>

@@ -13,13 +13,13 @@ export interface Messages {
 
 @Module({ dynamic: true, store, name: 'messages', namespaced: true })
 class MessageModule extends VuexModule {
-    public get refMessages(): firebase.firestore.CollectionReference {
+    public get collection(): firebase.firestore.CollectionReference {
         return db.collection('messages');
     }
 
     @Action
     public async add(content: string) {
-        await this.refMessages.add({
+        await this.collection.add({
             timeCreated: firestore.FieldValue.serverTimestamp(),
             content,
         });
@@ -27,7 +27,7 @@ class MessageModule extends VuexModule {
 
     @Action
     public async remove(message: Message) {
-        await this.refMessages.doc(message.id).delete();
+        await this.collection.doc(message.id).delete();
     }
 
     @Action
