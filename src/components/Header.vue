@@ -1,10 +1,15 @@
 <template lang="pug">
     #navbar
-        outer-link(to="/") Home
-        |  | 
-        router-link(to="/about") About
-        |  | 
-        router-link(to="/messages") Messages
+        .nav-brand
+        .nav-list
+            router-link(to="/") Home
+            |  | 
+            router-link(to="/about") About
+            |  | 
+            router-link(to="/messages") Messages
+        .logon
+            .sign-in-btn(v-if="logon") Sign in
+            .sign-out-btn(v-else) Sigin out
 </template>
 
 <script lang="ts">
@@ -13,17 +18,45 @@ import { Component } from 'vue-property-decorator';
 
 @Component
 export default class HeaderView extends Vue {
+    get logon(): boolean {
+        return false;
+    }
 }
 </script>
 
 <style lang="sass" scoped>
-#nav 
-  padding: 30px;
+#navbar
+    display: flex;
+    background-color: #555
+    padding: 1rem;
+    color: #aaa
 
-  a 
-    font-weight: bold;
-    color: #2c3e50;
+    .nav-brand
+        margin-right: auto;
 
-    &.router-link-exact-active 
-      color: #42b983;
+    .nav-list
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        a 
+            padding: 0 1rem;
+            font-weight: bold;
+            color: inherit;
+
+            &.router-link-exact-active 
+                color: #fff;
+
+    .logon
+        margin-left: auto;
+        .sign-in-btn, .sign-out-btn
+            padding: 0.5rem
+            border: 1.5px solid #eee;
+            border-radius: 5px;
+            color: #eee
+        .sign-in-btn
+            background-color: #eee;
+            color: #555;
+        
+
 </style>
