@@ -11,6 +11,7 @@ import { auth } from '@/script/firebase';
 import { Unsubscribe } from 'firebase';
 import userModule from '@/store/modules/user';
 import HeaderView from '@/components/Header.vue';
+import user from '@/store/modules/user';
 
 @Component({
   components: {
@@ -18,12 +19,9 @@ import HeaderView from '@/components/Header.vue';
   },
 })
 export default class App extends Vue {
-  public detacher: Unsubscribe | undefined = undefined;
 
   public created() {
-    this.detacher = auth.onAuthStateChanged((user) => {
-      userModule.login(user);
-    });
+    userModule.scribe();
   }
 
   get authorized(): boolean {
@@ -31,9 +29,7 @@ export default class App extends Vue {
   }
 
   public destroyed() {
-    if (this.detacher) {
-      this.detacher();
-    }
+    userModule.unscribe();
   }
 }
 </script>
