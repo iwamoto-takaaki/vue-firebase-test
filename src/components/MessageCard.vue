@@ -1,7 +1,7 @@
 <template lang="pug">
     .messageCard
-        .content {{ message.id }}: {{ message.content }} 
-        a(@click='remove') remove
+        .content {{ message.content }} 
+        font-awesome-icon(icon="trash" @click='remove')
 </template>
 <script lang="ts">
 import Vue from 'vue';
@@ -17,3 +17,14 @@ export default class MessageCardComponent extends Vue {
     }
 }
 </script>
+
+<style lang="sass" scoped>
+.messageCard
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    .content
+        padding: 0.5rem 2rem;
+</style>
