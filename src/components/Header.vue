@@ -33,6 +33,7 @@ export default class HeaderView extends Vue {
 
     .nav-brand
         margin-right: auto;
+        width: 8rem;
 
     .nav-list
         margin-left: auto;
@@ -49,6 +50,7 @@ export default class HeaderView extends Vue {
 
     .logon
         margin-left: auto;
+        width: 8rem;
         .sign-in-btn, .sign-out-btn
             padding: 0.5rem
             border: 1.5px solid #eee;
