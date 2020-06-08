@@ -8,18 +8,23 @@
             |  | 
             router-link(to="/messages") Messages
         .logon
-            .sign-in-btn(v-if="logon") Sign in
-            .sign-out-btn(v-else) Sigin out
+            router-link.sign-in-btn(v-if="!authorized" to="/auth") Sign in 
+            .sign-out-btn(v-else @click="signOut") Sigin out
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import user from '@/store/modules/user';
 import { Component } from 'vue-property-decorator';
 
 @Component
 export default class HeaderView extends Vue {
-    get logon(): boolean {
-        return false;
+    get authorized(): boolean {
+        return user.authorized;
+    }
+
+    public signOut() {
+        user.logout();
     }
 }
 </script>

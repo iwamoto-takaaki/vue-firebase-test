@@ -7,6 +7,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import { auth } from '@/script/firebase';
+import { Unsubscribe } from 'firebase';
+import userModule from '@/store/modules/user';
 import HeaderView from '@/components/Header.vue';
 
 @Component({
@@ -15,6 +18,23 @@ import HeaderView from '@/components/Header.vue';
   },
 })
 export default class App extends Vue {
+  public detacher: Unsubscribe | undefined = undefined;
+
+  public created() {
+    this.detacher = auth.onAuthStateChanged((user) => {
+      userModule.login(user);
+    });
+  }
+
+  get authorized(): boolean {
+    return userModule.authorized;
+  }
+
+  public destroyed() {
+    if (this.detacher) {
+      this.detacher();
+    }
+  }
 }
 </script>
 
