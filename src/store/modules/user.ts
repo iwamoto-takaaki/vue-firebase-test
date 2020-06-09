@@ -6,46 +6,40 @@ import { Unsubscribe } from 'firebase';
 
 @Module({ dynamic: true, store, name: 'user', namespaced: true })
 class UserModule extends VuexModule {
+
+    public get authorized(): boolean {
+        return this.user !== null;
+    }
     public user: User | null | undefined = null;
-    public detacher: Unsubscribe | undefined = undefined;
-
-    @Mutation
-    public LOGIN(user: User | null) {
-        this.user = user;
-    }
-
-    @Mutation
-    public LOGOUT() {
-        this.user = null;
-    }
-
-    @Action
-    public async login(user: User | null) {
-        await this.LOGIN(user);
-    }
+    private detacher: Unsubscribe | undefined = undefined;
 
     @Action
     public async logout() {
         await auth.signOut();
-        // await this.LOGOUT();
     }
 
     @Action
-    public scribe() {
+    public subscribe() {
         this.detacher = auth.onAuthStateChanged((user) => {
             this.login(user);
         });
     }
 
     @Action
-    public unscribe() {
+    public unsubscribe() {
         if (this.detacher) {
             this.detacher();
           }
     }
 
-    public get authorized(): boolean {
-        return this.user !== null;
+    @Mutation
+    private LOGIN(user: User | null) {
+        this.user = user;
+    }
+
+    @Action
+    private async login(user: User | null) {
+        await this.LOGIN(user);
     }
 }
 

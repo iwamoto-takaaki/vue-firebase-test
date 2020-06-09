@@ -21,7 +21,7 @@ import user from '@/store/modules/user';
 export default class App extends Vue {
 
   public created() {
-    userModule.scribe();
+    userModule.subscribe();
   }
 
   get authorized(): boolean {
@@ -29,7 +29,7 @@ export default class App extends Vue {
   }
 
   public destroyed() {
-    userModule.unscribe();
+    userModule.unsubscribe();
   }
 }
 </script>
